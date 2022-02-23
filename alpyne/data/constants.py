@@ -55,6 +55,7 @@ class InputTypes(Enum):
     BOOLEAN = "BOOLEAN"
     OBJECT = "OBJECT"
     DATE_TIME = "DATE_TIME"
+    DOUBLE_ARRAY = "DOUBLE_ARRAY"
 
     @staticmethod
     def to_class(input_: Union[str, 'InputTypes']) -> Union[Type, None]:
@@ -95,6 +96,14 @@ class InputTypes(Enum):
             return InputTypes.DOUBLE
         elif isinstance(input_, datetime):
             return InputTypes.DATE_TIME
+        elif isinstance(input_, list):
+            if(len(input_) != 0):
+                if(isinstance(input_[0], float) or isinstance(input_[0], int)):
+                    return InputTypes.DOUBLE_ARRAY
+                else:
+                    return InputTypes.OBJECT
+            else:
+                return InputTypes.OBJECT
         else:
             return InputTypes.OBJECT
 
@@ -120,6 +129,8 @@ class InputTypes(Enum):
             return ischeck(value, dict)
         elif expected == InputTypes.DATE_TIME:
             return ischeck(value, (str, datetime))
+        elif expected == InputTypes.DOUBLE_ARRAY:
+            return ischeck(value, list)
         return False
 
 
